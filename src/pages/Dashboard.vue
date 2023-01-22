@@ -1,31 +1,24 @@
 <script setup>
 import { onMounted, reactive, ref, watch } from 'vue';
 import ProductService from '~/service/ProductService';
-//import { useLayout } from '@/layout/composables/layout';
-//const { isDarkTheme, contextPath } = useLayout();
 
 const products = ref(null);
-const lineData = reactive({
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
-            tension: 0.4
-        },
-        {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.4
-        }
-    ]
-});
+const onProfile = ref(false)
+
+const user = reactive({
+  id: 0,
+  login: null,
+  role: null,
+  birthday: null,
+  first_name: null,
+  last_name: null,
+  patronymic: null,
+  email: null,
+  ballance: 0,
+  address: null,
+  bank_name: null,
+  bank_card: null,
+})
 const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
     { label: 'Remove', icon: 'pi pi-fw pi-minus' }
@@ -38,75 +31,32 @@ onMounted(() => {
 });
 
 const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    return value.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' });
 };
-const applyLightTheme = () => {
-    lineOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#495057'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: '#495057'
-                },
-                grid: {
-                    color: '#ebedef'
-                }
-            },
-            y: {
-                ticks: {
-                    color: '#495057'
-                },
-                grid: {
-                    color: '#ebedef'
-                }
-            }
-        }
-    };
-};
-
-const applyDarkTheme = () => {
-    lineOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#ebedef'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: '#ebedef'
-                },
-                grid: {
-                    color: 'rgba(160, 167, 181, .3)'
-                }
-            },
-            y: {
-                ticks: {
-                    color: '#ebedef'
-                },
-                grid: {
-                    color: 'rgba(160, 167, 181, .3)'
-                }
-            }
-        }
-    };
-};
+const showProfile = (data) => {
+  user.id = data.id || 0 
+  user.login = data.login || 'rozan'
+  user.role = data.role || 'мл. модератор (забанен 1ч.)'
+  user.birthday = data.bithday || '13.13.22'
+  user.first_name = data.first_name || 'Иван'
+  user.last_name = data.last_name || 'Рязанов'
+  user.patronymic = data.patronymic || 'Порфирьевич'
+  user.email = data.email || 'rozan@tair.ru'
+  user.ballance = data.ballance || 12
+  user.address = data.address || 'РФ Баден-Баден'
+  user.bank_name = data.bank_name || 'Тинькофф'
+  user.bank_card = data.bank_card || '****3232'
+//
+  onProfile.value = !onProfile.value
+}
 
 watch(
     //isDarkTheme,
     (val) => {
         if (val) {
-            applyDarkTheme();
+            //applyDarkTheme();
         } else {
-            applyLightTheme();
+            //applyLightTheme();
         }
     },
     { immediate: true }
@@ -126,14 +76,14 @@ watch(
                         <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">24 зарегистрировано </span>
-                <span class="text-500">за текущий день</span>
-				<div class='field'>
-				<Button class='mt-2 p-button-sm p-button-raised p-button-secondary p-button-text'>Просмотр регистраций</Button>
+				<div>
+                  <Button icon="pi pi-user" class="p-button-rounded p-button-info p-button-text" label="Регистраций" badge="8" badgeClass="p-badge-blue"/>        
+                  <Button icon="pi pi-user" class="p-button-rounded p-button-info p-button-text" label="Конверсий из уник. в рег." badge="50" badgeClass="p-badge-blue"/>        
+				  <!--Button class='mt-2 p-button-sm p-button-raised p-button-secondary p-button-text'>Просмотр регистраций</Button-->				
                 </div>
             </div>
         </div>
-        <div class="col-12 lg:col-6 xl:col-3">
+        <div class="col-6 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -144,11 +94,34 @@ watch(
                         <i class="pi pi-map-marker text-orange-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">%520 выведено на счета</span>
-                <span class="text-500">за прошедший период</span>
+				<div>
+                  <Button icon="pi pi-user" class="p-button-rounded p-button-info p-button-text" label="Всего" badge="100" badgeClass="p-badge-blue"/>        
+                  <Button icon="pi pi-user" class="p-button-rounded p-button-info p-button-text" label="Сегодня депозитов" badge="1" badgeClass="p-badge-blue"/>        
+				</div>	
+                <div class="grid text-center">
+                  <div class="col-6 md:col-4 mb-1 px-2">
+                    <span class="p-3 shadow-2 mb-1 inline-block surface-card" style="border-radius: 6px">
+					  <i class="pi pi-apple mr-4 p-text-secondary text-1xl text-blue-300" style="font-size: 1.5rem" v-badge.success="'13'"></i>
+                    </span>
+                    <p class="text-700 line-height-2">Конверсий рег. в депозиты</p>
+                  </div>
+                  <div class="col-6 md:col-4 mb-1 px-2">
+                    <span class="p-3 shadow-2 mb-1 inline-block surface-card" style="border-radius: 6px">
+                      <i class="pi pi-apple mr-4 p-text-secondary text-1xl text-blue-300" style="font-size: 1.5rem" v-badge.danger="'100'"></i>
+                    </span>
+                    <p class="text-700 line-height-2">Сумма первых депозитов</p>
+                  </div>
+                  <div class="col-6 md:col-4 mb-1 px-2">
+                    <span class="p-3 shadow-2 mb-1 inline-block surface-card" style="border-radius: 6px">
+                      <i class="pi pi-apple mr-4 p-text-secondary text-1xl text-blue-300" style="font-size: 1.5rem" v-badge.danger="'5'"></i>
+                    </span>
+                    <p class="text-700 line-height-2">Средний первый депозит</p>
+                  </div>				  
+                </div>		
+
             </div>
         </div>
-        <div class="col-12 lg:col-6 xl:col-3">
+        <div class="col-6 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -161,6 +134,26 @@ watch(
                 </div>
                 <span class="text-green-500 font-medium">20 принесло доход в казино</span>
                 <span class="text-500">в прошедший месяц</span>
+                <div class="grid text-center">
+                  <div class="col-6 md:col-4 mb-1 px-2">
+                    <span class="p-3 shadow-2 mb-1 inline-block surface-card" style="border-radius: 6px">
+					  <i class="pi pi-apple mr-4 p-text-secondary text-1xl text-blue-300" style="font-size: 1.5rem" v-badge.success="'13'"></i>
+                    </span>
+                    <p class="text-700 line-height-2">Выигрыш игроков</p>
+                  </div>
+                  <div class="col-6 md:col-4 mb-1 px-2">
+                    <span class="p-3 shadow-2 mb-1 inline-block surface-card" style="border-radius: 6px">
+                      <i class="pi pi-apple mr-4 p-text-secondary text-1xl text-blue-300" style="font-size: 1.5rem" v-badge.danger="'100'"></i>
+                    </span>
+                    <p class="text-700 line-height-2">Проигрыш игроков</p>
+                  </div>
+                  <div class="col-6 md:col-4 mb-1 px-2">
+                    <span class="p-3 shadow-2 mb-1 inline-block surface-card" style="border-radius: 6px">
+                      <i class="pi pi-apple mr-4 p-text-secondary text-1xl text-blue-300" style="font-size: 1.5rem" v-badge.danger="'5'"></i>
+                    </span>
+                    <p class="text-700 line-height-2">Средний процент успеха</p>
+                  </div>				  
+                </div>				
             </div>
         </div>
         <div class="col-12 lg:col-6 xl:col-3">
@@ -179,33 +172,11 @@ watch(
             </div>
         </div>
 
-        <div class="col-12 xl:col-6">
-            <!--div class="card">
-                <h5>Recent Sales</h5>
-                <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
-                    <Column style="width: 15%">
-                        <template #header> Image </template>
-                        <template #body="slotProps">
-                            <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.image" width="50" class="shadow-2" />
-                        </template>
-                    </Column>
-                    <Column field="name" header="Name" :sortable="true" style="width: 35%"></Column>
-                    <Column field="price" header="Price" :sortable="true" style="width: 35%">
-                        <template #body="slotProps">
-                            {{ formatCurrency(slotProps.data.price) }}
-                        </template>
-                    </Column>
-                    <Column style="width: 15%">
-                        <template #header> View </template>
-                        <template #body>
-                            <Button icon="pi pi-search" type="button" class="p-button-text"></Button>
-                        </template>
-                    </Column>
-                </DataTable>
-            </div-->
+        <Dialog header="Профиль пользователя" v-model:visible="onProfile" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :maximizable="true" :modal="true">
+
             <div class="card">
                 <div class="flex justify-content-between align-items-center mb-5">
-                    <h5>Профиль пользователя #09528</h5>
+                    <h5>Анкета #{{ user.id }}</h5>
                     <div>
                         <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
                         <Menu ref="menu2" :popup="true" :model="items"></Menu>
@@ -214,110 +185,61 @@ watch(
                 <ul class="list-none p-0 m-0">
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Рязанов Иван Порфирьевич</span>
-							<span class="text-900 font-medium mr-2 mb-1 md:mb-0">rozan rozan@tair.ru</span>
-                            <div class="mt-1 text-600">мл. модератор (забанен 1ч.)</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-orange-500 h-full" style="width: 50%"></div>
-                            </div>
-                            <span class="text-orange-500 ml-3 font-medium">%50</span>
+                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ user.first_name }} {{ user.patronymic }} {{ user.last_name }}</span>
+							<span class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ user.email }}</span>
+                            <div class="mt-1 text-600">{{ user.role }}</div>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Анкета</span>
-                            <div class="mt-1 text-600">13.13.22, РФ Баден-Баден</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-cyan-500 h-full" style="width: 16%"></div>
-                            </div>
-                            <span class="text-cyan-500 ml-3 font-medium">%16</span>
+                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Анкета полная</span>
+                            <div class="mt-1 text-600">{{ user.birthday }}, {{ user.address }}</div>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
                             <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Платёжные данные</span>
-                            <div class="mt-1 text-600">Тинькофф</div>
-                            <div class="mt-1 text-600">****3232 Баланс - 12 монет</div>							
+                            <div class="mt-1 text-600">{{ user.bank_name }}</div>
+                            <div class="mt-1 text-600">{{ user.bank_card }} Баланс - {{ user.ballance }} монет</div>							
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-pink-500 h-full" style="width: 67%"></div>
-                            </div>
-                            <span class="text-pink-500 ml-3 font-medium">%67</span>
+
                         </div>
                     </li>
 
                 </ul>
             </div>
-        </div>
-        <div class="col-12 xl:col-6">
 
+            <template #footer>
+                <!--Button label="Yes" icon="pi pi-check" @click="closeMaximizable" autofocus /-->
+            </template>
+        </Dialog>
+
+        <div class="col-12 xl:col-7">
             <div class="card">
-                <div class="flex align-items-center justify-content-between mb-4">
-                    <h5>Доска Лидеров</h5>
-                    <div>
-                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu1.toggle($event)"></Button>
-                        <Menu ref="menu1" :popup="true" :model="items"></Menu>
-                    </div>
-                </div>
-
-                <span class="block text-600 font-medium mb-3">TODAY</span>
-                <ul class="p-0 mx-0 mt-0 mb-4 list-none">
-                    <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-dollar text-xl text-blue-500"></i>
-                        </div>
-                        <span class="text-900 line-height-3"
-                            >Richard Jones
-                            <span class="text-700">has purchased a blue t-shirt for <span class="text-blue-500">79$</span></span>
-                        </span>
-                    </li>
-                    <li class="flex align-items-center py-2">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-orange-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-download text-xl text-orange-500"></i>
-                        </div>
-                        <span class="text-700 line-height-3">Your request for withdrawal of <span class="text-blue-500 font-medium">2500$</span> has been initiated.</span>
-                    </li>
-                </ul>
-
-                <span class="block text-600 font-medium mb-3">YESTERDAY</span>
-                <ul class="p-0 m-0 list-none">
-                    <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-dollar text-xl text-blue-500"></i>
-                        </div>
-                        <span class="text-900 line-height-3"
-                            >Keyser Wick
-                            <span class="text-700">has purchased a black jacket for <span class="text-blue-500">59$</span></span>
-                        </span>
-                    </li>
-                    <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-pink-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-question text-xl text-pink-500"></i>
-                        </div>
-                        <span class="text-900 line-height-3"
-                            >Jane Davis
-                            <span class="text-700">has posted a new questions about your product.</span>
-                        </span>
-                    </li>
-                </ul>
+                <h5>Таблица пользователей</h5>
+                <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
+                    <Column style="" header="Id">
+                        <template #body="slotProps">
+                          {{ slotProps.data.id }}
+                        </template>
+                    </Column>
+                    <Column field="name" header="Пользователь" :sortable="true" style="width: 45%"></Column>
+                    <Column field="price" header="Депозиты" :sortable="true" style="width: 15%">
+                        <template #body="slotProps">
+                            {{ formatCurrency(slotProps.data.price) }}
+                        </template>
+                    </Column>
+                    <Column header="Действия" style="width: 20%">
+                        <template #body="{data}">
+                            <Button icon="pi pi-search" type="button" class="p-button-text" @click='showProfile(data)'></Button>
+							<Button icon="pi pi-pencil" type="button" class="p-button-text" @click='updateProfile(data)'></Button>
+                        </template>
+                    </Column>
+                </DataTable>
             </div>
-            <!--div
-                class="px-4 py-5 shadow-2 flex flex-column md:flex-row md:align-items-center justify-content-between mb-3"
-                style="border-radius: 1rem; background: linear-gradient(0deg, rgba(0, 123, 255, 0.5), rgba(0, 123, 255, 0.5)), linear-gradient(92.54deg, #1c80cf 47.88%, #ffffff 100.01%)"
-            >
-                <div>
-                    <div class="text-blue-100 font-medium text-xl mt-2 mb-3">TAKE THE NEXT STEP</div>
-                    <div class="text-white font-medium text-5xl">Try PrimeBlocks</div>
-                </div>
-                <div class="mt-4 mr-auto md:mt-0 md:mr-0">
-                    <a href="https://www.primefaces.org/primeblocks-vue" class="p-button font-bold px-5 py-3 p-button-warning p-button-rounded p-button-raised"> Get Started </a>
-                </div>
-            </div-->
+
         </div>
+
     </div>
 </template>

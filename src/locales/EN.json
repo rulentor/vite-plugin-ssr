@@ -1,0 +1,9 @@
+{
+  "payment": {
+    "title": "Payment methods"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "chat": "Support chat"
+  }
+}

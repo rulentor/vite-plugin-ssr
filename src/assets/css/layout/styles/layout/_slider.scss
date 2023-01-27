@@ -1,0 +1,12 @@
+.indicators {
+  justify-content: space-around;
+  left: 72px;
+  position: relative;
+  bottom: 63px;
+  width: 180px;
+  button {
+    width: 1rem !important;
+    height: 1rem !important;
+    border-radius: 50% !important;
+  }
+}

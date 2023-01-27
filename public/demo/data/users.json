@@ -1,0 +1,7 @@
+{
+    "data": [
+        {"id": "1000","first_name": "Иван","last_name": "Помидоров","sex": "муж.","email":"mail@mail.ru","phone":"+7911","country": "Россия","city": "Магадан","currency":"RUB","bonus": 24,"deposit": 100,"rating": 5},
+        {"id": "1001","first_name": "Женя","last_name": "Капустина","sex": "жен.","email":"zhenya@mail.ru","phone":"+7812","country": "Япония","city": "село Ачивки","currency":"RUB","bonus": 4,"deposit": 20,"rating": 5}
+    ]
+}
+    
